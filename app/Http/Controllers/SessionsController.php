@@ -12,6 +12,7 @@ class SessionsController extends Controller
     }
 
     public function store(){
+
         //validate the request
         $attributes=request()->validate([
             'email'=>'requiered|exists:unique:users,email',
@@ -21,16 +22,16 @@ class SessionsController extends Controller
         //attempt authenticate and to log in the user
         //based on the provided credentials
         if(auth()->attempt($attributes)){
+            //auth failed
+            throw ValidationExeption::withMessages([
+                'email' => 'Your provided credentials could not be verified.'
+            ]);
+            
             session()-regenerate();
             
             //redirect wirh a success flash message
             return redirect('/')->with('success', 'Welcome Back!');
         }
-
-        //auth failed
-        throw ValidationExeption::withMessages([
-            'email' => 'Your provided credentials could not be verified.'
-        ]);
     }
 
     public function destroy(){
