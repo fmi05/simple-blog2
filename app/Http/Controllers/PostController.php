@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
-    public function index() 
+    public function index()
     {
         return view('posts.index', [
-            'posts' => Post::latest()->filter(request(['search', 'category', 'author']))->get()
+            'posts' => Post::latest()->filter(
+                        request(['search', 'category', 'author'])
+                    )->paginate(18)->withQueryString()
         ]);
     }
 
-    public function show(Post $post) 
+    public function show(Post $post)
     {
-        return view('post.show', [
+        return view('posts.show', [
             'post' => $post
         ]);
     }
